@@ -34,7 +34,6 @@ interface GameState {
 
 function Blackjack() {
   const [account, setAccount] = useState<string>("");
-  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [loading, setLoading] = useState(false);
@@ -121,7 +120,6 @@ function Blackjack() {
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, signer);
 
-      setProvider(provider);
       setAccount(accounts[0]);
       setContract(contract);
       setMessage("Wallet connected!");
@@ -328,7 +326,7 @@ function Blackjack() {
         .find((e: any) => e && e.name === "GameEnded");
 
       if (event) {
-        const { playerTotal, dealerTotal, result } = event.args;
+        const { dealerTotal, result } = event.args;
 
         // Fetch dealer's complete hand (all cards)
         let dealerFullHand: number[] = [];
@@ -386,7 +384,6 @@ function Blackjack() {
         // User disconnected wallet
         setAccount("");
         setContract(null);
-        setProvider(null);
         setGameState(null);
         setMessage("Wallet disconnected");
       } else if (accounts[0] !== account) {
