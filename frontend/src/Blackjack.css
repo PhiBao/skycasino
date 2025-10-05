@@ -1,0 +1,358 @@
+/* Blackjack Game Styles */
+
+.blackjack-container {
+  min-height: 100vh;
+  min-width: 100vw;
+  background: linear-gradient(135deg, #ffd208 0%, #ffd208 50%, #ffd208 100%);
+  color: white;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  color: #1a1a1a;
+}
+
+/* Connect Section */
+.connect-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.account-info {
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px 20px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: #ffd208;
+}
+
+/* Game Table */
+.game-table {
+  max-width: 900px;
+  margin: 0 auto 30px;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border: 3px solid rgba(255, 210, 8, 0.3);
+}
+
+.hand {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.hand h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #ffd208;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+/* Card Styles */
+.card {
+  width: 100px;
+  height: 140px;
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s;
+  position: relative;
+  animation: dealCard 0.3s ease-out;
+}
+
+@keyframes dealCard {
+  from {
+    transform: translateY(-100px) rotateY(180deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0) rotateY(0);
+    opacity: 1;
+  }
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card.red {
+  color: #dc143c;
+}
+
+.card.black {
+  color: #000;
+}
+
+.card-value {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-suit {
+  font-size: 1.5rem;
+  margin-top: 5px;
+}
+
+.card-back {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+  font-size: 3rem;
+}
+
+.card-mystery {
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  color: white;
+  font-size: 1rem;
+  cursor: help;
+  opacity: 0.8;
+}
+
+.hand-total {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #ffd208;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.dealer-info {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  color: #ffd208;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.bust {
+  color: #ff4444;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 10px;
+  animation: pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.no-game {
+  font-size: 1.2rem;
+  color: #cccccc;
+  padding: 40px;
+}
+
+/* Game Result */
+.game-result {
+  text-align: center;
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 15px;
+  max-width: 600px;
+  margin: 20px auto;
+  border: 3px solid #ffd208;
+}
+
+.game-result h2 {
+  font-size: 2rem;
+  color: #ffd208;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Controls */
+.controls {
+  max-width: 600px;
+  margin: 30px auto;
+  text-align: center;
+}
+
+.start-controls {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.bet-input {
+  padding: 15px 20px;
+  font-size: 1.1rem;
+  border: 2px solid #ffd208;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffd208;
+  width: 200px;
+  text-align: center;
+}
+
+.bet-input:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.8);
+  border-color: #ffed4e;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+}
+
+.btn-large {
+  padding: 20px 60px;
+  font-size: 1.5rem;
+}
+
+/* Message */
+.message {
+  text-align: center;
+  margin: 20px auto;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  max-width: 600px;
+  font-size: 1.1rem;
+  color: #ffd208;
+  border: 2px solid rgba(255, 210, 8, 0.3);
+}
+
+/* Instructions */
+.instructions {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 25px;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 15px;
+  border: 2px solid rgba(255, 210, 8, 0.5);
+}
+
+.instructions h3 {
+  color: #ffd208;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.instructions ul {
+  list-style: none;
+  padding: 0;
+}
+
+.instructions li {
+  padding: 10px;
+  margin: 8px 0;
+  background: rgba(255, 210, 8, 0.1);
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .card {
+    width: 80px;
+    height: 110px;
+    font-size: 1.5rem;
+  }
+
+  .cards {
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 12px 30px;
+    font-size: 1rem;
+  }
+
+  .btn-large {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+  }
+
+  .game-table {
+    padding: 20px;
+  }
+}

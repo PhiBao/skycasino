@@ -24,9 +24,9 @@
     "hardhat"
   ],
   "dependencies": {
-    "encrypted-types": "^0.0.4",
     "@fhevm/solidity": "^0.8.0",
-    "@zama-fhe/oracle-solidity": "^0.1.0"
+    "@zama-fhe/oracle-solidity": "^0.1.0",
+    "encrypted-types": "^0.0.4"
   },
   "devDependencies": {
     "@fhevm/hardhat-plugin": "^0.1.0",
@@ -45,6 +45,7 @@
     "chai": "^4.5.0",
     "chai-as-promised": "^8.0.1",
     "cross-env": "^7.0.3",
+    "dotenv": "^17.2.3",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "ethers": "^6.15.0",

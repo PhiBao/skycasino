@@ -8,14 +8,26 @@ import "hardhat-gas-reporter";
 import type { HardhatUserConfig } from "hardhat/config";
 import { vars } from "hardhat/config";
 import "solidity-coverage";
+import { config as dotenvConfig } from "dotenv";
+
+// Load environment variables from .env file
+dotenvConfig();
 
 import "./tasks/accounts";
 import "./tasks/FHECounter";
+import "./tasks/FHEBlackjack";
 
 // Run 'npx hardhat vars setup' to see the list of variables that need to be set
+// OR create a .env file with MNEMONIC and INFURA_API_KEY
 
-const MNEMONIC: string = vars.get("MNEMONIC", "test test test test test test test test test test test junk");
-const INFURA_API_KEY: string = vars.get("INFURA_API_KEY", "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+// Priority: .env file > hardhat vars > default
+const MNEMONIC: string =
+  process.env.MNEMONIC || vars.get("MNEMONIC", "test test test test test test test test test test test junk");
+
+const INFURA_API_KEY: string =
+  process.env.INFURA_API_KEY || vars.get("INFURA_API_KEY", "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+
+const ETHERSCAN_API_KEY: string = process.env.ETHERSCAN_API_KEY || vars.get("ETHERSCAN_API_KEY", "");
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
@@ -24,7 +36,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      sepolia: vars.get("ETHERSCAN_API_KEY", ""),
+      sepolia: ETHERSCAN_API_KEY,
     },
   },
   gasReporter: {
