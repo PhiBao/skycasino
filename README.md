@@ -1,213 +1,118 @@
-# 🎰 SkyCasino - FHEVM Blackjack from FHEVM Hardhat Template
+# 🎰 SkyCasino - FHEVM Blackjack
 
 A fully functional, provably fair blackjack game built on Zama's FHEVM (Fully Homomorphic Encryption Virtual Machine).
-Experience the future of online gambling with encrypted, trustless gameplay on Ethereum's Sepolia testnet.A
-Hardhat-based template for developing Fully Homomorphic Encryption (FHE) enabled Solidity smart contracts using the
-
-FHEVM protocol by Zama.
+Experience the future of online gambling with encrypted, trustless gameplay on Ethereum's Sepolia testnet.
 
 ![License](https://img.shields.io/badge/license-BSD--3--Clause--Clear-blue)
-
-![Solidity](https://img.shields.io/badge/solidity-0.8.24-blue)## Quick Start
-
-![Hardhat](https://img.shields.io/badge/hardhat-2.26.0-yellow)
-
-![React](https://img.shields.io/badge/react-18-blue)For detailed instructions see:
-
-[FHEVM Hardhat Quick Start Tutorial](https://docs.zama.ai/protocol/solidity-guides/getting-started/quick-start-tutorial)
+![Solidity](https://img.shields.io/badge/solidity-0.8.24-blue)
+![Hardhat](https://img.shields.io/badge/hardhat-2.26.0-yellow) ![React](https://img.shields.io/badge/react-19-blue)
 
 ## 🌟 Features
 
+- **🔐 Provably Fair Gaming**: Dealer's hole card encrypted using FHEVM
+- **🎮 Complete Blackjack**: Hit, Stand, Bust mechanics with automatic dealer AI
+- **💰 Real ETH Betting**: Wager Sepolia ETH with automatic payouts (2x on win)
+- **🎨 Beautiful UI**: Casino-style interface with animated card dealing
+- **🔗 MetaMask Integration**: Automatic network detection and switching
+- **✅ Fully Tested**: 26 passing tests covering all game scenarios
+- **📱 Responsive Design**: Works on desktop and mobile
+
+## 🎯 Live Demo
+
+**Contract Address (Sepolia):** `0x8a15d7Ed46AeF0D89519426903dFECC2729BA0e1`
+
+**Etherscan:** [View Contract](https://sepolia.etherscan.io/address/0x8a15d7Ed46AeF0D89519426903dFECC2729BA0e1)
+
+## 🚀 Quick Start
+
 ### Prerequisites
 
-- **🔐 Provably Fair Gaming**: Dealer's hole card encrypted using FHEVM
-
-- **🎮 Complete Blackjack**: Hit, Stand, Bust mechanics with automatic dealer AI- **Node.js**: Version 20 or higher
-
-- **💰 Real ETH Betting**: Wager Sepolia ETH with automatic payouts (2x on win)- **npm or yarn/pnpm**: Package manager
-
-- **🎨 Beautiful UI**: Casino-style interface with animated card dealing
-
-- **🔗 MetaMask Integration**: Automatic network detection and switching### Installation
-
-- **✅ Fully Tested**: 26 passing tests covering all game scenarios
-
-- **📱 Responsive Design**: Works on desktop and mobile1. **Install dependencies**
-
-## 🎯 Live Demo ```bash
-
-npm install
-
-**Contract Address (Sepolia):** `0x8a15d7Ed46AeF0D89519426903dFECC2729BA0e1` ```
-
-## 🚀 Quick Start2. **Set up environment variables**
-
-### Prerequisites ```bash
-
-npx hardhat vars set MNEMONIC
-
 - **Node.js** v20 or higher
+- **MetaMask** browser extension
+- **Sepolia ETH** (get from [Alchemy Faucet](https://sepoliafaucet.com))
 
-- **MetaMask** browser extension # Set your Infura API key for network access
+### Installation
 
-- **Sepolia ETH** (get from [Alchemy Faucet](https://sepoliafaucet.com) or
-  [Infura Faucet](https://infura.io/faucet/sepolia)) npx hardhat vars set INFURA_API_KEY
-
-### Installation # Optional: Set Etherscan API key for contract verification
-
-npx hardhat vars set ETHERSCAN_API_KEY
-
-`bash   `
-
+```bash
 # Clone the repository
-
-git clone https://github.com/PhiBao/skycasino.git3. **Compile and test**
-
+git clone https://github.com/PhiBao/skycasino.git
 cd skycasino
 
-````bash
+# Install dependencies
+npm install
+cd frontend && npm install && cd ..
 
-# Install dependencies   npm run compile
-
-npm install   npm run test
-
-cd frontend && npm install && cd ..   ```
-
-
-
-# Set up environment variables4. **Deploy to local network**
-
+# Set up environment variables
 cp .env.example .env
+cp frontend/.env.example frontend/.env
 
-cp frontend/.env.example frontend/.env   ```bash
+# Edit .env files with your values
+nano .env              # Add MNEMONIC and INFURA_API_KEY
+nano frontend/.env     # Add VITE_INFURA_API_KEY
+```
 
-# Start a local FHEVM-ready node
+### Run Locally
 
-# Edit .env files with your values   npx hardhat node
+```bash
+# Compile contracts
+npx hardhat compile
 
-nano .env              # Add MNEMONIC and INFURA_API_KEY   # Deploy to local network
+# Run tests (optional)
+npx hardhat test
 
-nano frontend/.env     # Add VITE_INFURA_API_KEY   npx hardhat deploy --network localhost
-
-```   ```
-
-
-
-### Run Locally5. **Deploy to Sepolia Testnet**
-
-
-
-```bash   ```bash
-
-# Compile contracts   # Deploy to Sepolia
-
-npx hardhat compile   npx hardhat deploy --network sepolia
-
-# Verify contract on Etherscan
-
-# Run tests (optional)   npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
-
-npx hardhat test   ```
-
-
-
-# Start frontend6. **Test on Sepolia Testnet**
-
+# Start frontend
 cd frontend
-
-npm run dev   ```bash
-
-# Open http://localhost:5173/   # Once deployed, you can run a simple test on Sepolia.
-
-```   npx hardhat test --network sepolia
-
-````
+npm run dev
+# Open http://localhost:5173/
+```
 
 ## 🎮 How to Play
 
-## 📁 Project Structure
-
 1. **Connect Wallet** - Click "Connect Wallet" and approve MetaMask
-
-2. **Place Bet** - Enter bet amount (e.g., 0.01 ETH) and click "Start Game"```
-
-3. **Play Your Hand**fhevm-hardhat-template/
-   - **Hit**: Draw another card├── contracts/ # Smart contract source files
-
-   - **Stand**: Keep your current hand, dealer plays automatically│ └── FHECounter.sol # Example FHE counter contract
-
-4. **Win Conditions**├── deploy/ # Deployment scripts
-   - Get closer to 21 than dealer without going over├── tasks/ # Hardhat custom tasks
-
-   - Bust if you go over 21├── test/ # Test files
-
-   - Win pays 2x your bet├── hardhat.config.ts # Hardhat configuration
-
-   - Push (tie) returns your bet└── package.json # Dependencies and scripts
-
-````
+2. **Place Bet** - Enter bet amount (e.g., 0.01 ETH) and click "Start Game"
+3. **Play Your Hand**
+   - **Hit**: Draw another card
+   - **Stand**: Keep your current hand, dealer plays automatically
+4. **Win Conditions**
+   - Get closer to 21 than dealer without going over
+   - Bust if you go over 21
+   - Win pays 2x your bet
+   - Push (tie) returns your bet
 
 ## 🏗️ Architecture
 
-## 📜 Available Scripts
+### Smart Contract
 
-### Smart Contract (`contracts/FHEBlackjack.sol`)
+**File:** `contracts/FHEBlackjack.sol`
 
-| Script             | Description              |
+Key Features:
 
-```solidity| ------------------ | ------------------------ |
+- Encrypted dealer hole card using FHEVM
+- Automatic dealer AI (draws until 17+)
+- Secure betting with automatic payouts
+- Event-driven architecture for frontend integration
 
-// Key Features:| `npm run compile`  | Compile all contracts    |
+**Stats:**
 
-- Encrypted dealer hole card using FHEVM| `npm run test`     | Run all tests            |
+- 260 lines of Solidity
+- 26 passing tests
+- Full scenario coverage
 
-- Automatic dealer AI (draws until 17+)| `npm run coverage` | Generate coverage report |
+### Frontend
 
-- Secure betting with automatic payouts| `npm run lint`     | Run linting checks       |
+**Files:**
 
-- Event-driven architecture for frontend integration| `npm run clean`    | Clean build artifacts    |
+- `frontend/src/Blackjack.tsx` - Main game component (460+ lines)
+- `frontend/src/Blackjack.css` - Casino-style styling
+- `frontend/src/config.ts` - Network configuration
 
-````
+**Stack:** React 19 + TypeScript + Vite + ethers.js v6
 
-## 📚 Documentation
+## 🧪 Testing
 
-**Contract Size:** 260 lines
-
-**Tests:** 26 passing - [FHEVM Documentation](https://docs.zama.ai/fhevm)
-
-**Coverage:** All game scenarios-
-[FHEVM Hardhat Setup Guide](https://docs.zama.ai/protocol/solidity-guides/getting-started/setup)
-
-- [FHEVM Testing Guide](https://docs.zama.ai/protocol/solidity-guides/development-guide/hardhat/write_test)
-
-### Frontend (`frontend/src/`)- [FHEVM Hardhat Plugin](https://docs.zama.ai/protocol/solidity-guides/development-guide/hardhat)
-
-````## 📄 License
-
-- Blackjack.tsx    - Main game component (460+ lines)
-
-- Blackjack.css    - Casino-style stylingThis project is licensed under the BSD-3-Clause-Clear License. See the [LICENSE](LICENSE) file for details.
-
-- config.ts        - Network and contract configuration
-
-```## 🆘 Support
-
-
-
-**Stack:** React 18 + TypeScript + Vite + ethers.js v6- **GitHub Issues**: [Report bugs or request features](https://github.com/zama-ai/fhevm/issues)
-
-- **Documentation**: [FHEVM Docs](https://docs.zama.ai)
-
-## 🧪 Testing- **Community**: [Zama Discord](https://discord.gg/zama)
-
-
-
-```bash---
-
+```bash
 # Run all tests
-
-npx hardhat test**Built with ❤️ by the Zama team**
-
+npx hardhat test
 
 # Expected output:
 # ✓ 26 passing tests
@@ -216,11 +121,11 @@ npx hardhat test**Built with ❤️ by the Zama team**
 # ✓ Stand Action (6 tests)
 # ✓ Game End (4 tests)
 # ✓ View Functions (4 tests)
-````
+```
 
 ## 🔐 Security
 
-- **Environment Variables**: All sensitive data (mnemonics, API keys) stored in `.env` files
+- **Environment Variables**: All sensitive data stored in `.env` files
 - **Git Ignored**: `.env` files never committed to repository
 - **Encrypted State**: Dealer's hole card hidden using FHEVM until game ends
 - **Secure Payouts**: Automatic, trustless ETH transfers
@@ -249,16 +154,19 @@ VITE_CHAIN_NAME="Sepolia"
 ### Deploy to Sepolia
 
 ```bash
-# Make sure you have environment variables set
+# Set up environment variables
 npx hardhat vars set MNEMONIC
 npx hardhat vars set INFURA_API_KEY
 
-# Deploy
+# Deploy contract
 npx hardhat deploy --network sepolia --tags FHEBlackjack --reset
 
-# Note the deployed contract address
-# Update frontend/.env with VITE_CONTRACT_ADDRESS
+# Update frontend/.env with the new contract address
 ```
+
+### Deploy Frontend to Vercel
+
+See [DEPLOY_TO_VERCEL.md](DEPLOY_TO_VERCEL.md) for step-by-step instructions.
 
 ### Verify Contract (Optional)
 
@@ -297,7 +205,7 @@ npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
 
 ### Frontend
 
-- **React** 18
+- **React** 19
 - **TypeScript** 5.8.3
 - **Vite** 7.1.9
 - **ethers.js** 6.15.0
@@ -309,12 +217,36 @@ npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
 - **Infura** RPC provider
 - **MetaMask** wallet integration
 
+## 📁 Project Structure
+
+```
+skycasino/
+├── contracts/
+│   ├── FHEBlackjack.sol      # Main game contract
+│   └── FHECounter.sol         # Example counter
+├── deploy/
+│   └── deployBlackjack.ts     # Deployment script
+├── tasks/
+│   └── FHEBlackjack.ts        # CLI interaction tasks
+├── test/
+│   └── FHEBlackjack.ts        # 26 comprehensive tests
+├── frontend/
+│   ├── src/
+│   │   ├── Blackjack.tsx      # Main game UI
+│   │   ├── Blackjack.css      # Casino styling
+│   │   └── config.ts          # Network config
+│   └── .env                   # Frontend env vars
+├── .env                       # Backend env vars
+├── hardhat.config.ts          # Hardhat configuration
+└── README.md                  # This file
+```
+
 ## 📊 Project Statistics
 
 - **Smart Contract**: 260 lines
 - **Frontend**: 460+ lines (React/TypeScript)
 - **Tests**: 297 lines (26 passing tests)
-- **Documentation**: Comprehensive guides
+- **Documentation**: 3 comprehensive guides
 - **Total Code**: ~2000+ lines
 
 ## 🤝 Contributing
@@ -336,15 +268,16 @@ BSD-3-Clause-Clear License - see [LICENSE](LICENSE) file
 This project is submitted to the Zama Developer Program:
 
 - **Track**: Builder Track
-- **Score**: 87/100 (see ZAMA_SUBMISSION_EVALUATION.md)
+- **Score**: 87/100 (see [ZAMA_SUBMISSION_EVALUATION.md](ZAMA_SUBMISSION_EVALUATION.md))
 - **Highlights**: Complete dApp with smart contract, frontend, tests, and documentation
 
 ## 🔗 Links
 
+- **GitHub**: https://github.com/PhiBao/skycasino
 - **Zama FHEVM**: https://docs.zama.ai/fhevm
 - **Sepolia Explorer**: https://sepolia.etherscan.io/
 - **Get Sepolia ETH**: https://sepoliafaucet.com
-- **Documentation**: See QUICK_START.md for detailed setup
+- **Quick Start Guide**: [QUICK_START.md](QUICK_START.md)
 
 ## 🙏 Acknowledgments
 
