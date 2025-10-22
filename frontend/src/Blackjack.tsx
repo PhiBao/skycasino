@@ -38,7 +38,7 @@ function Blackjack() {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [betAmount, setBetAmount] = useState("1");
+  const [betAmount, setBetAmount] = useState("0.00001");
 
   // Check and switch network if needed
   const checkAndSwitchNetwork = async () => {
