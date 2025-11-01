@@ -132,6 +132,14 @@ function Blackjack() {
     }
   };
 
+  // Disconnect wallet
+  const disconnectWallet = () => {
+    setAccount("");
+    setContract(null);
+    setGameState(null);
+    setMessage("Wallet disconnected");
+  };
+
   // Load current game state
   const loadGameState = async (contractInstance?: ethers.Contract) => {
     try {
@@ -418,6 +426,9 @@ function Blackjack() {
         <div className="game-section">
           <div className="account-info">
             Connected: {account.slice(0, 6)}...{account.slice(-4)}
+            <button onClick={disconnectWallet} className="btn btn-disconnect">
+              Disconnect
+            </button>
           </div>
 
           {/* Game Table */}
