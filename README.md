@@ -263,14 +263,6 @@ Contributions welcome! Please:
 
 BSD-3-Clause-Clear License - see [LICENSE](LICENSE) file
 
-## 🏆 Zama Developer Program
-
-This project is submitted to the Zama Developer Program:
-
-- **Track**: Builder Track
-- **Score**: 87/100 (see [ZAMA_SUBMISSION_EVALUATION.md](ZAMA_SUBMISSION_EVALUATION.md))
-- **Highlights**: Complete dApp with smart contract, frontend, tests, and documentation
-
 ## 🔗 Links
 
 - **GitHub**: https://github.com/PhiBao/skycasino
