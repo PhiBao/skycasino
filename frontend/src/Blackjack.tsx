@@ -32,7 +32,11 @@ interface GameState {
   dealerTotal?: number;
 }
 
-function Blackjack() {
+interface BlackjackProps {
+  onBack: () => void;
+}
+
+function Blackjack({ onBack }: BlackjackProps) {
   const [account, setAccount] = useState<string>("");
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [gameState, setGameState] = useState<GameState | null>(null);
@@ -45,19 +49,21 @@ function Blackjack() {
     try {
       if (!window.ethereum) return false;
 
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const network = await provider.getNetwork();
-      const currentChainId = Number(network.chainId);
+      const currentChainId = await window.ethereum.request({
+        method: "eth_chainId",
+      });
 
-      if (currentChainId !== NETWORK_CONFIG.chainId) {
+      if (currentChainId.toLowerCase() !== NETWORK_CONFIG.chainId.toLowerCase()) {
         setMessage(`Wrong network detected. Switching to ${NETWORK_CONFIG.chainName}...`);
 
         try {
           // Try to switch to Sepolia
           await window.ethereum.request({
             method: "wallet_switchEthereumChain",
-            params: [{ chainId: `0x${NETWORK_CONFIG.chainId.toString(16)}` }],
+            params: [{ chainId: NETWORK_CONFIG.chainId }],
           });
+          // Wait for network switch
+          await new Promise((resolve) => setTimeout(resolve, 500));
           setMessage(`Switched to ${NETWORK_CONFIG.chainName}!`);
           return true;
         } catch (switchError: any) {
@@ -68,7 +74,7 @@ function Blackjack() {
                 method: "wallet_addEthereumChain",
                 params: [
                   {
-                    chainId: `0x${NETWORK_CONFIG.chainId.toString(16)}`,
+                    chainId: NETWORK_CONFIG.chainId,
                     chainName: NETWORK_CONFIG.chainName,
                     rpcUrls: [NETWORK_CONFIG.rpcUrl],
                     nativeCurrency: {
@@ -80,6 +86,7 @@ function Blackjack() {
                   },
                 ],
               });
+              await new Promise((resolve) => setTimeout(resolve, 500));
               setMessage(`${NETWORK_CONFIG.chainName} network added and switched!`);
               return true;
             } catch (addError: any) {
@@ -89,7 +96,7 @@ function Blackjack() {
             }
           }
           console.error("Error switching network:", switchError);
-          setMessage(`Error: ${switchError.message}`);
+          setMessage(`Please switch to ${NETWORK_CONFIG.chainName}`);
           return false;
         }
       }
@@ -382,9 +389,18 @@ function Blackjack() {
   useEffect(() => {
     if (!window.ethereum) return;
 
-    const handleChainChanged = () => {
-      // Reload the page when chain changes (recommended by MetaMask)
-      window.location.reload();
+    const handleChainChanged = async (chainId: string) => {
+      console.log("Chain changed to:", chainId);
+
+      if (chainId.toLowerCase() !== NETWORK_CONFIG.chainId.toLowerCase()) {
+        setMessage(`Wrong network! Please switch to ${NETWORK_CONFIG.chainName}`);
+        setContract(null);
+        setAccount("");
+        setGameState(null);
+      } else {
+        // Network switched back to correct one
+        setMessage("Correct network detected. Please reconnect wallet.");
+      }
     };
 
     const handleAccountsChanged = (accounts: string[]) => {
@@ -414,6 +430,9 @@ function Blackjack() {
 
   return (
     <div className="blackjack-container">
+      <button onClick={onBack} className="btn-back">
+        ← Back to Menu
+      </button>
       <h1>🎰 Blackjack on FHEVM</h1>
 
       {!account ? (

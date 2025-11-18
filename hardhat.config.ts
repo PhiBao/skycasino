@@ -91,6 +91,7 @@ const config: HardhatUserConfig = {
         runs: 800,
       },
       evmVersion: "cancun",
+      viaIR: true, // Enable IR optimizer to fix "stack too deep" errors
     },
   },
   typechain: {

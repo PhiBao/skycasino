@@ -7,6 +7,27 @@
   color: white;
   padding: 20px;
   font-family: "Arial", sans-serif;
+  position: relative;
+}
+
+.btn-back {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 210, 8, 0.5);
+  color: #ffd208;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+.btn-back:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateX(-5px);
 }
 
 h1 {
