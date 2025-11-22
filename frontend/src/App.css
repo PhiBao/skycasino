@@ -75,10 +75,44 @@ html,
   color: #000;
 }
 
+.game-card .version-label {
+  color: #666;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: -0.25rem 0 0.75rem 0;
+  font-style: italic;
+}
+
 .game-card p {
   color: #333;
   margin-bottom: 1.5rem;
   font-size: 1rem;
+}
+
+.game-card-coming-soon {
+  position: relative;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.game-card-coming-soon:hover {
+  transform: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.coming-soon-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #ff4444;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid #000;
 }
 
 .game-stats {

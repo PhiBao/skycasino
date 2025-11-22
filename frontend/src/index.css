@@ -1,11 +1,13 @@
+@import "tailwindcss";
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: #000000;
+  background-color: #ffd208;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,12 +17,12 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: #000000;
+  text-decoration: underline;
 }
 
 a:hover {
-  color: #535bf2;
+  color: #333;
 }
 
 body {
@@ -41,25 +43,255 @@ h1 {
   line-height: 1.1;
 }
 
+/* Universal Button Styles - Cross-browser compatible */
 button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  border: 2px solid #000;
+  padding: 0.75em 1.5em;
   font-size: 1em;
-  font-weight: 500;
+  font-weight: 600;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #fff;
+  color: #000;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.3s ease;
+  outline: none;
+  display: inline-block;
+  text-align: center;
+  line-height: 1.5;
+  vertical-align: middle;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  box-sizing: border-box;
 }
 
-button:hover {
-  border-color: #646cff;
+button:hover:not(:disabled) {
+  background-color: #000;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 3px solid #ffd208;
+  outline-offset: 2px;
+}
+
+/* Button Variants */
+.btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 8px;
+  border: 2px solid #000;
+  padding: 0.75em 1.5em;
+  font-size: 1em;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  display: inline-block;
+  text-align: center;
+  line-height: 1.5;
+  vertical-align: middle;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: #fff;
+  border-color: #28a745;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #218838;
+  border-color: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  color: #000;
+  border-color: #ffc107;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background-color: #e0a800;
+  border-color: #e0a800;
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: #c82333;
+  border-color: #c82333;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #5a6268;
+  border-color: #5a6268;
+  transform: translateY(-2px);
+}
+
+.btn-large {
+  padding: 1em 2em;
+  font-size: 1.2em;
+}
+
+.btn-back {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  background: #fff;
+  border: 2px solid #000;
+  color: #000;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+  z-index: 1000;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.btn-back:hover {
+  background: #000;
+  color: #fff;
+  transform: translateX(-5px);
+}
+
+/* Common Component Styles */
+.connect-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.message-box {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 3px solid #000;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  max-width: 90%;
+  text-align: center;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #000;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.lobby-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.lobby-header h2 {
+  font-size: 2rem;
+  color: #000;
+}
+
+.game-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.game-header h2 {
+  font-size: 1.8rem;
+  color: #000;
+}
+
+.subtitle {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  font-size: 1.1rem;
 }
 
 @media (prefers-color-scheme: light) {
