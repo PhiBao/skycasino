@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import { parseEther, formatEther } from "viem";
 import contractABIJson from "./FHEPoker.abi.json";
-
-const POKER_CONTRACT_ADDRESS = "0xa4C546e630bCA61736ECC72a2191E2a169d2835C";
+import { POKER_CONTRACT_ADDRESS } from "./config";
 const contractABI = contractABIJson.abi;
 
 interface GameInfo {
@@ -117,7 +116,7 @@ function Poker({ onBack }: PokerProps) {
         setTimeout(() => setMessage(""), 3000);
       }
     } catch (error) {
-      console.error("Check active game error:", error);
+      // Check active game error (suppressed in production)
     }
   };
 
@@ -132,7 +131,7 @@ function Poker({ onBack }: PokerProps) {
 
       const games: GameInfo[] = [];
 
-      console.log(`Loading ${Number(gameCount)} poker games...`);
+      // loading poker games
 
       for (let i = 1; i <= Number(gameCount); i++) {
         try {
@@ -158,7 +157,7 @@ function Poker({ onBack }: PokerProps) {
 
           // Only show waiting games that are valid (have a real player1)
           if (Number(stage) === 0 && player1 !== "0x0000000000000000000000000000000000000000") {
-            console.log(`Game ${i} is valid and waiting:`, player1.slice(0, 10));
+            // game is valid and waiting
             games.push({
               gameId: i,
               player1: player1,
@@ -172,17 +171,17 @@ function Poker({ onBack }: PokerProps) {
               communityCardsRevealed: Number(communityCardsRevealed),
             });
           } else {
-            console.log(`Game ${i} filtered: stage=${stage}, player1=${player1}`);
+            // game filtered
           }
         } catch (e) {
-          console.error(`Error loading game ${i}:`, e);
+          // error loading individual game (ignored)
         }
       }
 
-      console.log(`Found ${games.length} available poker games`);
+      // found available poker games
       setAvailableGames(games);
     } catch (error: any) {
-      console.error("Load games error:", error);
+      // load games error (suppressed)
     }
   };
 
@@ -235,8 +234,7 @@ function Poker({ onBack }: PokerProps) {
         communityCardsRevealed: Number(communityCardsRevealed),
       });
     } catch (error: any) {
-      console.error("Load game info error:", error);
-      // Don't redirect to lobby on error during polling
+      // Load game info error (suppressed) - don't redirect to lobby on polling errors
     }
   };
 
@@ -275,7 +273,7 @@ function Poker({ onBack }: PokerProps) {
         setTimeout(() => setMessage(""), 3000);
       }
     } catch (error: any) {
-      console.error("Create game error:", error);
+      // Create game error (suppressed)
       setMessage(`Error: ${error.message}`);
     } finally {
       setLoading(false);
@@ -305,7 +303,7 @@ function Poker({ onBack }: PokerProps) {
         setTimeout(() => setMessage(""), 3000);
       }
     } catch (error: any) {
-      console.error("Leave game error:", error);
+      // Leave game error (suppressed)
       setMessage(`Error: ${error.message}`);
     } finally {
       setLoading(false);
@@ -340,7 +338,7 @@ function Poker({ onBack }: PokerProps) {
         setTimeout(() => setMessage(""), 3000);
       }
     } catch (error: any) {
-      console.error("Join game error:", error);
+      // Join game error (suppressed)
 
       // Check if game expired
       if (error.message && error.message.includes("Game expired")) {
@@ -397,7 +395,7 @@ function Poker({ onBack }: PokerProps) {
         setTimeout(() => setMessage(""), 3000);
       }
     } catch (error: any) {
-      console.error(`${action} error:`, error);
+      // player action error (suppressed)
       setMessage(`Error: ${error.message}`);
     } finally {
       setLoading(false);
@@ -441,16 +439,13 @@ function Poker({ onBack }: PokerProps) {
     const isPlayer1 = player === "p1";
     const playerAddress = isPlayer1 ? currentGame.player1 : currentGame.player2;
     const isYou = address && playerAddress.toLowerCase() === address.toLowerCase();
-    const isTurn =
-      currentGame.currentPlayer && currentGame.currentPlayer.toLowerCase() === playerAddress.toLowerCase();
+    const isTurn = currentGame.currentPlayer && currentGame.currentPlayer.toLowerCase() === playerAddress.toLowerCase();
     const isDealer = isPlayer1; // Small blind / acts first pre-flop in this demo
 
     return (
       <div
         className={`flex flex-col gap-3 rounded-2xl border-2 p-4 shadow-sm transition-colors ${
-          isYou
-            ? "bg-yellow-50/80 border-black ring-2 ring-yellow-400"
-            : "bg-blue-50/60 border-blue-200"
+          isYou ? "bg-yellow-50/80 border-black ring-2 ring-yellow-400" : "bg-blue-50/60 border-blue-200"
         }`}
       >
         <div className="flex items-center justify-between">
@@ -502,7 +497,9 @@ function Poker({ onBack }: PokerProps) {
             {isYou ? "Demo preview (FHE hidden on-chain)" : "(Hidden)"}
           </span>
         </div>
-        <div className="font-bold text-lg">Stack: {isPlayer1 ? currentGame.player1Stack : currentGame.player2Stack} ETH</div>
+        <div className="font-bold text-lg">
+          Stack: {isPlayer1 ? currentGame.player1Stack : currentGame.player2Stack} ETH
+        </div>
       </div>
     );
   };

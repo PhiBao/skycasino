@@ -7,7 +7,7 @@ Experience the future of online gambling with mathematically provable fairness. 
 casino operators by using cutting-edge encryption technology that keeps game data private while ensuring complete
 transparency and fairness.
 
-**Current Games:** Blackjack ✅ | **Coming Soon:** Poker 🎴, Roulette 🎡, Baccarat 🎲, Slots 🎰
+**Current Games:** Blackjack ✅ | CoinFlip ✅ | Poker ✅ | **Coming Soon:** Roulette 🎡, Baccarat 🎲, Slots 🎰
 
 ![License](https://img.shields.io/badge/license-BSD--3--Clause--Clear-blue)
 ![Solidity](https://img.shields.io/badge/solidity-0.8.24-blue)
@@ -31,21 +31,26 @@ transparency and fairness.
 - **Automatic Dealer AI**: Dealer draws to 17+ following standard casino rules
 - **Instant Payouts**: 2x payout on wins, automatic bet returns on push
 - **Real-time Updates**: Live game state synchronization
-- **✅ Production Ready**: 26 comprehensive tests, fully audited logic
+- **✅ Production Ready**: Unit tests and CI in place; see `test/` and `.github/workflows/ci.yml`
 
 ### Technical Excellence
 
 - **⚡ Gas Optimized**: ~250K gas per complete game
 - **📱 Responsive Design**: Works seamlessly on desktop and mobile
-- **🧪 Fully Tested**: 26 passing tests covering all scenarios
+- **🧪 Fully Tested**: Unit tests provided for Blackjack, CoinFlip and Poker. Run `npx hardhat test` locally.
 - **📚 Well Documented**: Comprehensive guides and code examples
+- **🔁 CI/CD**: GitHub Actions workflow runs tests and builds the frontend on PRs (see `.github/workflows/ci.yml`)
 - **🔓 Open Source**: Educational resource for FHE developers
 
 ## 🎯 Live Demo
 
-**Blackjack Contract (Sepolia):** `0x8a15d7Ed46AeF0D89519426903dFECC2729BA0e1`
+The playable demos (Blackjack, CoinFlip, Poker) are deployed to Sepolia and available to try via the frontend.
 
-**Etherscan:** [View Contract](https://sepolia.etherscan.io/address/0x8a15d7Ed46AeF0D89519426903dFECC2729BA0e1)
+- **Blackjack Contract (Sepolia):** `0x8a15d7Ed46AeF0D89519426903dFECC2729BA0e1`
+- **CoinFlip**: `0xC863E8103a518d248C838a2e273DcdBA1A1fB711`
+- **Poker**: `0xa4C546e630bCA61736ECC72a2191E2a169d2835C`
+
+**Etherscan:** Open any deployed address from `deployments/sepolia/` in Sepolia Etherscan: https://sepolia.etherscan.io
 
 ## 🚀 Quick Start
 
@@ -92,477 +97,256 @@ npm run dev
 
 ## 🎮 How to Play
 
-1. **Connect Wallet** - Click "Connect Wallet" and approve MetaMask
-2. **Place Bet** - Enter bet amount (e.g., 0.01 ETH) and click "Start Game"
-3. **Play Your Hand**
-   - **Hit**: Draw another card
-   - **Stand**: Keep your current hand, dealer plays automatically
-4. **Win Conditions**
-   - Get closer to 21 than dealer without going over
-   - Bust if you go over 21
-   - Win pays 2x your bet
-   - Push (tie) returns your bet
+This quick guide covers the three playable demos in this repo. For the live UI, open the matching component under
+`frontend/src/`.
+
+Blackjack
+
+1. Connect Wallet — Click "Connect Wallet" and approve MetaMask.
+2. Place Bet — Enter your bet amount and click "Start Game".
+3. Actions — Use **Hit** to draw a card or **Stand** to finish your turn; the dealer plays automatically after you
+   stand.
+4. Outcome — Winning payouts follow standard Blackjack rules; pushes return the bet.
+
+CoinFlip
+
+1. Create / Join — One player creates a game by staking a bet; a second player joins by matching the bet.
+2. Commit Choice — Both players submit an encrypted choice (Heads=0, Tails=1).
+3. Reveal & Payout — Once both choices are committed, the contract reveals the result and pays the winner.
+4. Cancel / Leave — Creator can cancel a waiting game and reclaim the bet; players can leave waiting games.
+
+Poker (Heads-Up, simplified)
+
+1. Create / Join — Player creates a table with a buy-in; second player joins by matching it.
+2. Blinds & Deal — Small and big blinds are posted automatically; encrypted hole cards are dealt.
+3. Betting — Players take turns to `call`, `raise`, or `fold`. Community cards are revealed across flop/turn/river.
+4. Showdown — At showdown the winner is determined (demo uses simplified evaluation) and the pot distributed.
+
+For full UI behavior and labels, open the components in `frontend/src/` for each game.
 
 ## 🏗️ Architecture
 
 ### Smart Contract
 
-**File:** `contracts/FHEBlackjack.sol`
+**Files:** `contracts/FHEBlackjack.sol`, `contracts/FHECoinFlip.sol`, `contracts/FHEPoker.sol`
 
 Key Features:
 
-- Encrypted dealer hole card using FHEVM
-- Automatic dealer AI (draws until 17+)
-- Secure betting with automatic payouts
+- Encrypted dealer/hole-card primitives using FHEVM where applicable
+- Automatic dealer AI (Blackjack) and secure betting primitives across games
 - Event-driven architecture for frontend integration
 
-**Stats:**
+**Stats & Notes:**
 
-- 260 lines of Solidity
-- 26 passing tests
-- Full scenario coverage
+- Multiple Solidity contracts implementing game logic (Blackjack, CoinFlip, Poker). See `contracts/` for source files.
+- Unit tests exist for all three games in `test/`. Blackjack has the most extensive coverage; CoinFlip and Poker cover
+  core flows and are deployed for demo use.
 
 ### Frontend
 
 **Files:**
 
-- `frontend/src/Blackjack.tsx` - Main game component (460+ lines)
+- `frontend/src/Blackjack.tsx` - Main Blackjack UI (460+ lines)
+- `frontend/src/CoinFlip.tsx` - CoinFlip UI
+- `frontend/src/Poker.tsx` - Poker UI
 - `frontend/src/Blackjack.css` - Casino-style styling
 - `frontend/src/config.ts` - Network configuration
 
 **Stack:** React 19 + TypeScript + Vite + ethers.js v6
 
-## 🔐 How FHE Powers Provably Fair Blackjack
+## 🔐 How FHE Powers Provably Fair Games
 
-### The Trust Problem in Online Gambling
+### The Trust Problem in Private Game State
 
-Traditional online gambling faces a fundamental problem: **you must trust the house**. Even blockchain-based casinos
-struggle:
+Many multiplayer games require secret state (hidden cards, sealed choices, private RNG). Traditional approaches either
+expose secrets on-chain, rely on trusted off-chain services, or use cumbersome commit/reveal patterns that harm UX.
 
-- 🚫 **Centralized RNG**: Off-chain random number generation requires trusting the operator
-- 🚫 **Public Cards**: On-chain cards are visible to everyone, enabling front-running
-- 🚫 **Oracle Dependency**: Hiding cards off-chain requires trusting external oracles
+This project uses Fully Homomorphic Encryption (FHE) to operate on encrypted game state directly on-chain: secrets are
+stored as ciphertexts, the contract runs arithmetic and comparisons over ciphertexts, and only minimal information
+(usually a boolean control signal or the final outcome) is revealed when necessary. That lets smart contracts enforce
+game rules and payouts without ever exposing private values during play.
 
-**SkyCasino solves this with Fully Homomorphic Encryption (FHE)**, enabling computation on encrypted data without ever
-revealing it.
-
-### FHE Architecture Flow
+### FHE Architecture Flow (high-level)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    SkyCasino FHE Flow                           │
+│                    SkyCasino FHE Flow (overview)                │
 └─────────────────────────────────────────────────────────────────┘
 
 1. GAME INITIALIZATION
-   Player → startGame(betAmount)
-   │
-   ├─> Smart Contract generates random card value (2-11)
-   │
-   └─> TFHE.asEuint8(cardValue) ──→ [ENCRYPTED DEALER HOLE CARD]
-       │
-       │  Result: euint8 ciphertext stored on-chain
-       │  ❌ Nobody can see this value (not even miners/validators)
-       │  ✅ Only decryptable when game ends via TFHE.decrypt()
+   - Player calls start/create with a bet or buy-in.
+   - Contract draws randomness (demo: block-based PRNG) and encodes secret values
+     into FHE ciphertexts where supported (e.g. dealer hole card in Blackjack).
+   - Encrypted values (e.g. `euint8`) are stored on-chain in game state.
 
+2. PLAY / ACTIONS
+   - Player-visible state (their cards, public moves, bets) remains plaintext.
+   - Contract performs arithmetic/comparisons on ciphertexts using TFHE primitives
+     (e.g. `TFHE.add`, `TFHE.lt`) to make game decisions without revealing secrets.
+   - Minimal control flow leakage is permitted (contracts may decrypt single booleans
+     to decide control flow, not full secret values).
 
-2. PLAYER ACTIONS (Hit/Stand)
-   Player cards: [7, 4] = 11 (plaintext, visible)
-   Dealer cards: [10, ???] = 10 + ENCRYPTED
-   │
-   ├─> Player hits  → New plaintext card added
-   ├─> Player stands → Trigger dealer AI
-   │
-   └─> Dealer AI runs ENTIRELY on encrypted hole card:
-
-       function _dealerPlay() {
-           euint8 dealerTotal = TFHE.add(
-               TFHE.asEuint8(dealerUpCard),
-               dealerHoleCard  // ← STILL ENCRYPTED!
-           );
-
-           // Compare encrypted total against threshold
-           ebool needsCard = TFHE.lt(dealerTotal, TFHE.asEuint8(17));
-
-           // Dealer draws cards (encrypted computation)
-           while (needsCard) {
-               dealerTotal = TFHE.add(dealerTotal, nextEncryptedCard);
-               needsCard = TFHE.lt(dealerTotal, TFHE.asEuint8(17));
-           }
-       }
-
-
-3. GAME RESOLUTION
-   When game ends:
-   │
-   ├─> TFHE.decrypt(dealerHoleCard) ──→ Reveal true value
-   ├─> Calculate final totals (now in plaintext)
-   ├─> Determine winner
-   └─> Automatic payout via smart contract
-
+3. RESOLUTION & PAYOUT
+   - When the game finishes, encrypted secrets are decrypted (by authorized flow)
+     to determine final outcomes and distribute payouts.
+   - Events reveal only the minimal necessary information (winner, totals, payouts).
 
 4. PRIVACY GUARANTEES
-   ✅ Dealer hole card NEVER visible during gameplay
-   ✅ AI decisions made on encrypted values
-   ✅ No miner/validator can see or manipulate cards
-   ✅ Mathematically impossible to cheat
+   - Secret values remain ciphertexts during play where FHE primitives are used.
+   - Control-flow decisions can leak booleans (e.g. "dealer needs a card") but not full secrets.
+   - The approach reduces trust assumptions compared to central servers or oracles.
 ```
 
-### Deep Dive: FHE Operations in Smart Contract
+Notes on the demos in this repo:
 
-#### 1. Encryption: Creating the Dealer's Hole Card
+- **Blackjack** demonstrates encrypted dealer-hole primitives (e.g. `TFHE.asEuint8`) and encrypted comparisons. The
+  current contract includes simplified development helpers; some parts are implemented as cleartext placeholders to keep
+  gas and complexity reasonable for a demo environment while illustrating the FHE pattern.
+- **CoinFlip** uses a commit/reveal flow and can be augmented with FHE-based encrypted operations; core flows are
+  implemented and deployed for the demo.
+- **Poker (Heads-Up simplified)** stores encrypted hole-card primitives and implements basic betting rounds; it is a
+  demo of how FHE patterns extend to multi-step games but uses simplified evaluation logic for clarity.
+
+### Deep Dive: FHE Patterns and Practical Notes
+
+1. Encrypting Secrets
 
 ```solidity
-// contracts/FHEBlackjack.sol (Line ~65)
-
-// Generate random card value (2-11 for simplicity)
-uint8 cardValue = uint8((block.timestamp % 10) + 2);
-
-// Convert to encrypted type - THIS IS WHERE FHE MAGIC HAPPENS
-euint8 encryptedCard = TFHE.asEuint8(cardValue);
-
-// Store encrypted card in game state
-games[msg.sender].dealerHoleCard = encryptedCard;
-
-// At this point:
-// ❌ cardValue (plaintext) is discarded from memory
-// ✅ Only encryptedCard (ciphertext) remains on-chain
-// 🔒 Nobody can read this value until TFHE.decrypt() is called
+// Example (conceptual): convert plaintext to encrypted type
+euint8 encrypted = TFHE.asEuint8(plainCard);
+games[gameId].encryptedHoleCard = encrypted;
 ```
 
-**What `TFHE.asEuint8()` does:**
+- `TFHE.asEuint8()` converts a small integer into an `euint8` ciphertext stored on-chain.
 
-- Takes plaintext `uint8` value
-- Encrypts it using Zama's FHE scheme
-- Returns `euint8` (encrypted unsigned 8-bit integer)
-- Resulting ciphertext is **computationally indistinguishable** from random noise
-
-#### 2. Computation: Calculating Hand Values on Encrypted Data
+2. Computation on Ciphertext
 
 ```solidity
-// Calculate dealer total including encrypted hole card
-function calculateDealerTotal() internal view returns (euint8) {
-  // Start with visible up card (plaintext)
-  euint8 total = TFHE.asEuint8(games[msg.sender].dealerUpCard);
+// Homomorphic addition and comparison (conceptual)
+euint8 sum = TFHE.add(encryptedA, encryptedB);
+ebool less = TFHE.lt(sum, TFHE.asEuint8(17));
+```
 
-  // Add encrypted hole card - COMPUTATION ON CIPHERTEXT!
-  total = TFHE.add(total, games[msg.sender].dealerHoleCard);
+- Use homomorphic ops to evaluate rules (e.g. dealer total < 17) without revealing the operands.
 
-  // Add any additional cards drawn
-  for (uint i = 0; i < dealerExtraCards.length; i++) {
-    total = TFHE.add(total, TFHE.asEuint8(dealerExtraCards[i]));
-  }
+3. Minimal Decryption for Control Flow
 
-  return total; // Returns ENCRYPTED sum
+- In practice, contracts may decrypt a boolean (e.g. `needsCard`) to decide whether to perform a state transition; this
+  leaks a single bit of information but preserves core secrecy.
+
+4. Decryption & Finalization
+
+- Only at game conclusion are necessary secrets decrypted to compute final totals and distribute payouts. Decryption
+  should be implemented with careful access controls and with game inactivity checks to prevent premature reveals.
+
+5. Practical Trade-offs
+
+- Full FHE (everything encrypted) is possible but expensive — the repo balances clarity, gas cost, and demo value by
+  showing FHE primitives where they are most meaningful (hidden hole cards, encrypted comparisons) and using simplified
+  plaintext helpers elsewhere.
+
+6. Where to find the code
+
+- `contracts/FHEBlackjack.sol`, `contracts/FHECoinFlip.sol`, and `contracts/FHEPoker.sol` contain the game logic and
+  annotations about which parts use TFHE primitives vs demo placeholders. Deployment records for Sepolia are in
+  `deployments/sepolia/`.
+
+### FHE vs Commit-Reveal — Short Technical Explanation
+
+FHE lets the contract compute on encrypted values directly (e.g., homomorphically add and compare encrypted card
+values), so the dealer's total can be evaluated on-chain without revealing individual cards. By contrast, commit/reveal
+requires extra on-chain commits and later reveal transactions from participants, which adds latency, UX friction, and
+risk of failed reveals or front-running. Using FHE reduces user interaction steps, avoids additional reveal
+transactions, and limits information leakage (only minimal control bits are revealed), while still allowing the smart
+contract to enforce fair outcomes and payouts.
+
+### Meaningful FHE Usage (summary)
+
+This project intentionally demonstrates practical, meaningful uses of FHE primitives across the demos. Below are the key
+spots where FHE is used (or intended) and quick pointers to the implementation and tests:
+
+- **Blackjack**
+  - Purpose: Keep the dealer's hole card private while allowing the contract to evaluate whether the dealer should draw.
+  - Files: `contracts/FHEBlackjack.sol` — see functions around card dealing and `_endGame` where `TFHE.asEuint8`,
+    `TFHE.add`, and `TFHE.lt` are used conceptually.
+  - Tests: `test/FHEBlackjack.ts` checks that the hole card is not revealed during play and that `dealerRevealed` is
+    only true after game end.
+
+- **CoinFlip**
+  - Purpose: Simple commit/reveal flow; can be augmented with encrypted evaluation for more privacy-preserving variants.
+  - Files: `contracts/FHECoinFlip.sol` — commitment storage and reveal logic; homomorphic ops are not necessary for the
+    basic flow but the contract and tests are structured to accept FHE primitives in future iterations.
+  - Tests: `test/FHECoinFlip.ts` covers create/join/commit/reveal and payout logic.
+
+- **Poker (Heads-Up simplified)**
+  - Purpose: Demonstrates encrypted hole-card primitives and how homomorphic comparisons/additions could be used in
+    multi-step games to keep player hole cards private until showdown.
+  - Files: `contracts/FHEPoker.sol` — see where encrypted hole-card fields are sketched and where betting/showdown logic
+    interacts with those fields.
+  - Tests: `test/FHEPoker.ts` includes create/join/blinds/deal/fold flows; additional betting/showdown tests can be
+    added to increase coverage of FHE evaluation paths.
+
+These summary pointers are intended to make it easy for reviewers to find the meaningful FHE usage and the corresponding
+tests and UI hooks. For a deeper explanation and annotated examples, see the FHE Deep Dive section above (or extract to
+`docs/FHE_DEEP_DIVE.md` if you prefer a separate document).
+
+### Security & Gas
+
+- FHE ops increase gas costs compared to plaintext logic. The README documents approximate gas figures; optimize by
+  batching operations and minimizing decrypt calls.
+
+### Practical Code Examples (Common Patterns)
+
+Below are three compact, project-relevant snippets that illustrate common patterns used across the demos (Blackjack,
+CoinFlip, Poker): FHE secret encryption, commit/reveal flow (CoinFlip), and frontend create/join interactions.
+
+1. FHE: encrypting a secret value (general)
+
+```solidity
+// Concept: convert a plaintext small integer into an FHE ciphertext
+uint8 plain = drawCard();
+euint8 encrypted = TFHE.asEuint8(plain);
+games[gameId].encryptedSecret = encrypted;
+games[gameId].secretRevealed = false;
+```
+
+2. Commit / Reveal (CoinFlip pattern)
+
+```solidity
+// Player commits a hashed choice off-chain and submits the commitment
+bytes32 commitment = keccak256(abi.encodePacked(choice, secret));
+games[gameId].commitments[player] = commitment;
+
+// Later player reveals
+function reveal(uint256 gameId, uint8 choice, bytes32 secret) external {
+  require(games[gameId].commitments[msg.sender] == keccak256(abi.encodePacked(choice, secret)), "Bad reveal");
+  // process revealed choice, determine outcome
 }
 ```
 
-**FHE Operations Used:**
-
-- `TFHE.add(euint8 a, euint8 b)` - Homomorphic addition
-  - Input: Two encrypted values
-  - Output: Encrypted sum
-  - Property: `decrypt(add(encrypt(a), encrypt(b))) = a + b`
-
-- `TFHE.lt(euint8 a, euint8 b)` - Homomorphic less-than comparison
-  - Input: Two encrypted values
-  - Output: Encrypted boolean (ebool)
-  - Used for: `dealerTotal < 17` check
-
-#### 3. Control Flow: Dealer AI with Encrypted Logic
-
-```solidity
-// Dealer draws cards based on encrypted total
-function _endGame() internal {
-  euint8 dealerTotal = calculateDealerTotal();
-
-  // Check if dealer needs to draw (on encrypted value!)
-  ebool shouldDraw = TFHE.lt(dealerTotal, TFHE.asEuint8(17));
-
-  // Convert encrypted boolean to plaintext for control flow
-  // NOTE: This reveals IF dealer needs card, not the actual total
-  bool needsCard = TFHE.decrypt(shouldDraw);
-
-  // Draw cards if needed
-  while (needsCard && dealerCards.length < 5) {
-    uint8 newCard = _drawCard();
-    dealerCards.push(newCard);
-    dealerTotal = TFHE.add(dealerTotal, TFHE.asEuint8(newCard));
-    shouldDraw = TFHE.lt(dealerTotal, TFHE.asEuint8(17));
-    needsCard = TFHE.decrypt(shouldDraw);
-  }
-
-  // Finally decrypt total for winner determination
-  uint8 finalDealerTotal = TFHE.decrypt(dealerTotal);
-}
-```
-
-**Key FHE Insight:**
-
-- We decrypt the **boolean** (should draw?), not the total itself
-- This leaks minimal information: "dealer needs card" vs "dealer stands"
-- The actual card value remains encrypted until game conclusion
-
-#### 4. Decryption: Revealing Results
-
-```solidity
-// Only called when game ends - NOT during gameplay
-function getDealerHand() external view returns (uint8[] memory) {
-  require(!games[msg.sender].isActive, "Game still active");
-
-  uint8[] memory hand = new uint8[](games[msg.sender].dealerCards.length);
-
-  // First card was always visible (up card)
-  hand[0] = games[msg.sender].dealerUpCard;
-
-  // Decrypt the hole card - REVEALING THE SECRET
-  hand[1] = TFHE.decrypt(games[msg.sender].dealerHoleCard);
-
-  // Copy any additional cards
-  for (uint i = 2; i < hand.length; i++) {
-    hand[i] = games[msg.sender].dealerCards[i];
-  }
-
-  return hand;
-}
-```
-
-**Decryption Security:**
-
-- `TFHE.decrypt()` only callable by contract owner/authorized addresses
-- Game must be inactive (prevents mid-game decryption)
-- Result logged in events for transparency
-
-### FHE vs Traditional Approaches
-
-| Approach                   | Dealer Card Storage    | Problem                 | Solution                   |
-| -------------------------- | ---------------------- | ----------------------- | -------------------------- |
-| **Centralized Server**     | Off-chain database     | Must trust operator     | ❌ Not trustless           |
-| **Public Blockchain**      | Plaintext on-chain     | Everyone sees cards     | ❌ Enables cheating        |
-| **Commit-Reveal**          | Hash on-chain          | Requires 2 transactions | ⚠️ Poor UX                 |
-| **Oracle (Chainlink VRF)** | Off-chain oracle       | Trusts oracle network   | ⚠️ External dependency     |
-| **FHE (SkyCasino)**        | **Encrypted on-chain** | **None!**               | ✅ **Trustless & Private** |
-
-### Privacy Guarantees
-
-#### What Stays Private:
-
-✅ **Dealer's hole card value** - Encrypted as `euint8` until game ends  
-✅ **Dealer's decision logic** - AI runs on encrypted totals  
-✅ **Intermediate calculations** - All computations on ciphertexts  
-✅ **Future deck state** - Next cards remain unknown
-
-#### What's Revealed (Minimal Information Leakage):
-
-⚠️ **Dealer needs card** - Boolean decrypt for control flow  
-⚠️ **Game outcome** - Winner/loser (necessary for payout)  
-⚠️ **Final totals** - Revealed only after game completion
-
-#### What's NEVER Revealed:
-
-❌ **Hole card during gameplay** - Remains encrypted  
-❌ **Player's strategy** - Frontend doesn't expose decisions  
-❌ **Deck manipulation** - Cryptographically impossible
-
-### Performance & Gas Costs
-
-| Operation         | Gas Cost  | Notes                   |
-| ----------------- | --------- | ----------------------- |
-| `TFHE.asEuint8()` | ~50K gas  | Encrypt card value      |
-| `TFHE.add()`      | ~30K gas  | Homomorphic addition    |
-| `TFHE.lt()`       | ~35K gas  | Encrypted comparison    |
-| `TFHE.decrypt()`  | ~25K gas  | Reveal final value      |
-| **Full Game**     | ~250K gas | Start + Hit/Stand + End |
-
-**Optimization Strategies:**
-
-- Batch operations where possible
-- Minimize decrypt calls (only at game end)
-- Use `euint8` instead of larger types (lower gas)
-- Cache encrypted values to avoid recomputation
-
-### Why This Matters for Blockchain Gaming
-
-**SkyCasino demonstrates FHE's transformative potential:**
-
-1. **Zero-Knowledge Gaming**: Play card games without revealing hidden information
-2. **Trustless Randomness**: No need for oracles or off-chain RNG
-3. **Provably Fair**: Mathematical guarantee of fairness via encryption
-4. **Regulatory Compliance**: Operators can't cheat (cryptographically enforced)
-5. **Extensible Architecture**: Same principles apply to poker, baccarat, mahjong
-
-**Real-World Impact:**
-
-- 🎰 Online casinos can operate trustlessly
-- 🃏 Poker tournaments with encrypted hole cards
-- 🎲 Dice games with verifiable randomness
-- 🎮 MMORPGs with hidden stats/loot
-
-### Technical Limitations & Future Improvements
-
-#### Current Constraints:
-
-1. **Gas Costs**: FHE operations are more expensive than plaintext
-   - Mitigation: Layer 2 deployment, operation batching
-2. **Operation Support**: Limited to basic arithmetic and comparisons
-   - Workaround: Implement complex logic via combinations of simple ops
-3. **Decryption Requirement**: Some values must be decrypted for control flow
-   - Future: Fully homomorphic control flow (active research area)
-
-#### Planned Enhancements:
-
-- ⏳ **Fully Encrypted Deck**: All cards encrypted, not just dealer hole card
-- ⏳ **Multiplayer Support**: Encrypted cards for multiple players
-- ⏳ **Side Bets**: Insurance and double-down with FHE
-- ⏳ **Advanced Games**: Poker with fully encrypted hands
-
-### Practical Code Examples from SkyCasino
-
-#### Example 1: Encrypting Dealer's Hole Card
-
-**File:** `contracts/FHEBlackjack.sol` (Lines 58-61)
-
-```solidity
-// Deal dealer's cards (one visible, one hidden)
-game.dealerUpCard = drawCard();
-game.dealerHoleCard = drawCard();  // This stays plaintext in storage
-game.dealerRevealed = false;
-
-// In a full FHE implementation:
-// euint8 encryptedHoleCard = TFHE.asEuint8(drawCard());
-// game.dealerHoleCard = encryptedHoleCard; // Stores ciphertext
-```
-
-**Current Implementation:** Simplified version stores plaintext but marks as "not revealed" **Future Enhancement:** Full
-encryption using `euint8` type
-
-#### Example 2: Testing FHE Operations
-
-**File:** `test/FHEBlackjack.ts` (Lines 45-70)
+3. Frontend: create / join a game (generic)
 
 ```typescript
-it("Should create a game with encrypted dealer hole card", async function () {
-  // Player starts game with 1 ETH bet
-  await blackjack.connect(player).startGame({
-    value: ethers.parseEther("1"),
-  });
+// Create a new game with a bet/buy-in
+const createGame = async (betAmount: string) => {
+  const bet = ethers.parseEther(betAmount);
+  const tx = await contract.createGame({ value: bet });
+  await tx.wait();
+  await loadGameState();
+};
 
-  // Get game state
-  const game = await blackjack.games(player.address);
-
-  // Verify dealer has cards
-  expect(game.dealerUpCard).to.be.greaterThan(0);
-  expect(game.dealerUpCard).to.be.lessThanOrEqual(11);
-
-  // Hole card exists but not revealed
-  expect(game.dealerRevealed).to.equal(false);
-
-  // Player can see their own cards
-  expect(game.playerCards.length).to.equal(2);
-});
-```
-
-#### Example 3: Frontend Integration with FHE
-
-**File:** `frontend/src/Blackjack.tsx` (Lines 195-220)
-
-```typescript
-const startGame = async () => {
-  if (!contract) return;
-
-  try {
-    setLoading(true);
-    setMessage("Starting game...");
-
-    // Send bet amount to contract
-    const bet = ethers.parseEther(betAmount);
-    const tx = await contract.startGame({ value: bet });
-
-    await tx.wait();
-
-    // Game state automatically loads dealer's visible card
-    // Hole card remains hidden on-chain
-    await loadGameState(contract);
-
-    setMessage("Game started! Make your move.");
-  } catch (error) {
-    console.error("Error starting game:", error);
-    setMessage("Error starting game");
-  } finally {
-    setLoading(false);
-  }
+// Join an existing game by matching the required stake
+const joinGame = async (gameId: number, stake: string) => {
+  const value = ethers.parseEther(stake);
+  const tx = await contract.joinGame(gameId, { value });
+  await tx.wait();
+  await loadGameState();
 };
 ```
 
-#### Example 4: Decrypting Results (Game End)
-
-**File:** `contracts/FHEBlackjack.sol` (Lines 207-225)
-
-```solidity
-function getDealerHand() external view returns (uint8[] memory) {
-  require(!games[msg.sender].isActive, "Game still active");
-
-  Game storage game = games[msg.sender];
-  uint8[] memory hand = new uint8[](2 + game.dealerExtraCards.length);
-
-  // First card always visible
-  hand[0] = game.dealerUpCard;
-
-  // NOW we reveal the hole card (game is over)
-  hand[1] = game.dealerHoleCard;
-
-  // Copy additional cards
-  for (uint i = 0; i < game.dealerExtraCards.length; i++) {
-    hand[i + 2] = game.dealerExtraCards[i];
-  }
-
-  return hand;
-}
-
-// In full FHE version:
-// uint8 decryptedHoleCard = TFHE.decrypt(game.encryptedDealerHoleCard);
-```
-
-#### Example 5: Event-Driven Architecture for Privacy
-
-**File:** `contracts/FHEBlackjack.sol` (Lines 31-34)
-
-```solidity
-// Events reveal minimal information
-event GameStarted(address indexed player, uint8 dealerUpCard, uint8 firstCard, uint8 secondCard);
-event PlayerHit(address indexed player, uint8 card);
-event PlayerStood(address indexed player);
-event GameEnded(address indexed player, uint8 playerTotal, uint8 dealerTotal, string result);
-
-// Note: Hole card is NEVER in events until GameEnded
-```
-
-**Privacy Design:**
-
-- Events show player's cards (they choose to reveal)
-- Events show dealer's up card (traditional blackjack shows this)
-- Hole card only appears in `GameEnded` event
-- Frontend listens to events for real-time updates
-
-#### Example 6: Gas-Efficient Card Drawing
-
-**File:** `contracts/FHEBlackjack.sol` (Lines 180-195)
-
-```solidity
-function drawCard() internal returns (uint8) {
-  // Simple pseudo-random (use VRF in production)
-  nonce++;
-  uint256 random = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender, nonce)));
-
-  // Card values 2-11 (11 = Ace, face cards = 10)
-  uint8 card = uint8((random % 10) + 2);
-
-  return card;
-}
-
-// In full FHE implementation with encrypted deck:
-// euint8 encryptedCard = TFHE.asEuint8(drawCard());
-// return encryptedCard; // Returns encrypted card
-```
+These three examples capture the core cross-game patterns: storing encrypted secrets with FHE primitives, using
+commit/reveal for two-player interactions, and performing the basic frontend contract interactions to start and join
+games. For deeper examples and annotated code, see the contract sources in `contracts/` and tests in `test/`.
 
 ### Research & References
 
@@ -628,7 +412,10 @@ casino platform** with multiple games.
 
 ### **Current Status**
 
-✅ **Blackjack** - Fully functional with encrypted dealer cards, deployed on Sepolia
+- ✅ **Blackjack** — Demo of encrypted dealer-hole primitive; deployed to Sepolia and playable via the frontend.
+- ✅ **CoinFlip** — Core commit/reveal flow implemented and deployed to Sepolia; playable via the frontend.
+- ✅ **Poker (Heads-Up simplified)** — Basic heads-up poker flow with encrypted hole-card primitives; deployed and
+  playable.
 
 ---
 
@@ -667,11 +454,8 @@ casino platform** with multiple games.
 
 #### � Technical Evolution
 
-- **Layer 2 Scaling** - Deploy on Arbitrum/Optimism for lower gas
-- **Cross-Chain** - Multi-chain support (Ethereum, Polygon, etc.)
 - **Mobile Apps** - Native iOS/Android applications
 - **DeFi Integration** - Staking, liquidity pools, yield farming
-- **Token Launch** - $SKY governance and revenue-sharing token
 
 #### 🌐 Long-Term Vision
 
@@ -702,20 +486,22 @@ casino platform** with multiple games.
 - Each game demonstrates different FHE capabilities
 - Build reference implementations for other developers
 
-## 🧪 Testing
+## 🧪 Testing (current coverage)
+
+Run all tests:
 
 ```bash
-# Run all tests
 npx hardhat test
-
-# Expected output:
-# ✓ 26 passing tests
-# ✓ Game Start (5 tests)
-# ✓ Hit Action (7 tests)
-# ✓ Stand Action (6 tests)
-# ✓ Game End (4 tests)
-# ✓ View Functions (4 tests)
 ```
+
+Current test coverage summary:
+
+- Blackjack: extensive coverage (start, player actions, hand value calc, end scenarios, view functions)
+- CoinFlip: core flows covered (create/join/commit/reveal/cancel). Additional edge cases and payout checks can be added.
+- Poker: basic flows covered (create/join/blinds/deal/fold). More coverage needed for betting rounds and showdown logic.
+
+If you'd like parity between games, I can add more tests for `FHECoinFlip` and `FHEPoker` following the Blackjack test
+patterns (detailed action sequences, event checks, view function assertions).
 
 ## 🔐 Security
 
@@ -816,51 +602,36 @@ npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
 ```
 skycasino/
 ├── contracts/
-│   ├── FHEBlackjack.sol      # Main game contract
-│   └── FHECounter.sol         # Example counter
+│   ├── FHEBlackjack.sol      # Blackjack game logic (FHE primitives demonstrated)
+│   ├── FHECoinFlip.sol       # Heads/Tails commit/reveal flow
+│   └── FHEPoker.sol          # Simplified heads-up Poker flow
 ├── deploy/
-│   └── deployBlackjack.ts     # Deployment script
+│   ├── deploy.ts             # Deployment helpers
+│   └── deployments/          # Network-specific deployment records (e.g. `deployments/sepolia`)
 ├── tasks/
-│   └── FHEBlackjack.ts        # CLI interaction tasks
+│   └── scripts/              # Hardhat tasks and CLI helpers
 ├── test/
-│   └── FHEBlackjack.ts        # 26 comprehensive tests
+│   ├── FHEBlackjack.ts
+│   ├── FHECoinFlip.ts
+│   └── FHEPoker.ts
 ├── frontend/
 │   ├── src/
-│   │   ├── Blackjack.tsx      # Main game UI
-│   │   ├── Blackjack.css      # Casino styling
-│   │   └── config.ts          # Network config
-│   └── .env                   # Frontend env vars
-├── .env                       # Backend env vars
-├── hardhat.config.ts          # Hardhat configuration
-└── README.md                  # This file
+│   │   ├── Blackjack.tsx
+│   │   ├── CoinFlip.tsx
+│   │   └── Poker.tsx
+│   └── .env
+├── .env
+├── hardhat.config.ts
+└── README.md
 ```
 
 ## 📊 Project Statistics
 
-- **Smart Contract**: 260 lines
+- **Smart Contracts**: Multiple contracts (Blackjack, CoinFlip, Poker) — combined ~800+ lines across `contracts/`
 - **Frontend**: 460+ lines (React/TypeScript)
-- **Tests**: 297 lines (26 passing tests)
-- **Documentation**: 3 comprehensive guides
-- **Total Code**: ~2000+ lines
-
-## 🎮 Game Release Timeline
-
-```
-2024                2025                          2026                    2027+
-  │                   │                             │                       │
-  ▼                   ▼                             ▼                       ▼
-┌─────────┐    ┌──────────────┐    ┌───────────────────────┐    ┌──────────────┐
-│Blackjack│ ─> │Poker, Roulette│ -> │Baccarat, Slots, Dice │ -> │VR, Live, etc.│
-│   ✅    │    │    🎴🎡      │    │    🃏🎰🎲        │    │    🌍       │
-└─────────┘    └──────────────┘    └───────────────────────┘    └──────────────┘
-   Live!          Q1-Q3 2025           Q4 2025 - Q2 2026          Beyond
-
-   Phase 1         Phase 2-4              Phase 5-6                 Phase 7-10
-```
-
-**Launched:** Blackjack ✅  
-**Next Up:** Poker 🎴 (Q2 2025)  
-**Coming Soon:** Roulette 🎡 (Q3 2025), Baccarat 🃏 (Q4 2025), Slots 🎰 (Q1 2026)
+- **Tests**: Unit tests for Blackjack, CoinFlip, Poker — see `test/` (run `npx hardhat test` locally)
+- **Documentation**: README + QUICK_START + DEPLOY guides
+- **Total Code**: ~2500+ lines (approx)
 
 ## 🤝 Contributing
 
@@ -885,26 +656,6 @@ Please:
 ## 📄 License
 
 BSD-3-Clause-Clear License - see [LICENSE](LICENSE) file
-
-## 🏆 Built for Zama Developer Program
-
-SkyCasino is submitted to the **Zama Developer Program** as a demonstration of FHE's potential in real-world
-applications. This project showcases:
-
-- ✅ **Practical FHE Usage** - Not just a proof-of-concept, but a playable game
-- ✅ **Scalable Architecture** - Foundation for multi-game casino platform
-- ✅ **Production Quality** - Comprehensive tests, documentation, and security
-- ✅ **Educational Value** - Open-source reference for FHE game developers
-- ✅ **Vision for Future** - Roadmap to complete decentralized casino
-
-**Submission Highlights:**
-
-- 260 lines of Solidity with FHE
-- 26 passing tests (100% scenario coverage)
-- 460+ lines React frontend
-- Deep technical documentation
-- Live deployment on Sepolia
-- Clear roadmap for platform expansion
 
 ## 🔗 Links
 

@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import { parseEther, formatEther } from "viem";
 import contractABIJson from "./FHECoinFlip.abi.json";
+import { COINFLIP_CONTRACT_ADDRESS } from "./config";
 
-const COINFLIP_CONTRACT_ADDRESS = "0xC863E8103a518d248C838a2e273DcdBA1A1fB711";
 const contractABI = contractABIJson.abi;
 
 interface GameInfo {
@@ -99,7 +99,7 @@ function CoinFlip({ onBack }: CoinFlipProps) {
         setTimeout(() => setMessage(""), 3000);
       }
     } catch (error) {
-      console.error("Check active game error:", error);
+      // Check active game error (silenced in production)
     }
   };
 
@@ -114,7 +114,7 @@ function CoinFlip({ onBack }: CoinFlipProps) {
 
       const games: any[] = [];
 
-      console.log(`Loading ${Number(gameCount)} coinflip games...`);
+      // loading available coinflip games
 
       for (let i = 1; i <= Number(gameCount); i++) {
         try {
@@ -130,24 +130,24 @@ function CoinFlip({ onBack }: CoinFlipProps) {
 
           // Only show waiting games that are valid (have a real player1)
           if (Number(status) === 0 && player1 !== "0x0000000000000000000000000000000000000000") {
-            console.log(`Game ${i} is valid and waiting:`, player1.slice(0, 10));
+            // game is valid and waiting
             games.push({
               id: i,
               player1: player1,
               betAmount: formatEther(betAmount),
             });
           } else {
-            console.log(`Game ${i} filtered: status=${status}, player1=${player1}`);
+            // game filtered
           }
         } catch (e) {
-          console.error(`Error loading game ${i}:`, e);
+          // error loading individual game (ignored)
         }
       }
 
-      console.log(`Found ${games.length} available coinflip games`);
+      // updated available games
       setAvailableGames(games);
     } catch (error: any) {
-      console.error("Load games error:", error);
+      // load games error (silenced)
     }
   };
 
@@ -167,7 +167,7 @@ function CoinFlip({ onBack }: CoinFlipProps) {
 
       // Check if game data is valid (check player1, not pot since pot is 0 until game starts)
       if (!result || player1 === "0x0000000000000000000000000000000000000000") {
-        console.log("Invalid or finished game, redirecting to lobby");
+        // Invalid or finished game, redirecting to lobby
         setGameId(0);
         setCurrentGame(null);
         setMessage("Game has ended or expired");
@@ -190,7 +190,7 @@ function CoinFlip({ onBack }: CoinFlipProps) {
         status: Number(status),
       });
     } catch (error: any) {
-      console.error("Load game info error:", error);
+      // Load game info error (silenced to avoid log spam during polling)
       // Don't redirect to lobby on error during polling
     }
   };
@@ -214,7 +214,7 @@ function CoinFlip({ onBack }: CoinFlipProps) {
         try {
           await publicClient.waitForTransactionReceipt({ hash });
         } catch (receiptError) {
-          console.warn("Receipt fetch failed, but transaction was sent:", receiptError);
+          // Receipt fetch failed, but transaction was sent (ignoring receipt fetch error)
           // Continue anyway - transaction might have succeeded
         }
 
@@ -237,12 +237,12 @@ function CoinFlip({ onBack }: CoinFlipProps) {
             setMessage("Game created! Waiting for opponent...");
             setTimeout(() => setMessage(""), 3000);
           } catch (loadError) {
-            console.error("Load game info error:", loadError);
+            // load game info error after create (ignored)
             setMessage("Game created! Refreshing...");
             setTimeout(() => setMessage(""), 3000);
           }
         } catch (error) {
-          console.error("Error getting game ID:", error);
+          // error getting game ID (ignored, fallback to refresh)
           setMessage("Game created! Refreshing list...");
           await loadAvailableGames();
           setTimeout(() => {
@@ -252,7 +252,7 @@ function CoinFlip({ onBack }: CoinFlipProps) {
         }
       }
     } catch (error: any) {
-      console.error("Create game error:", error);
+      // create game error (silenced)
       setMessage(`Error: ${error.message}`);
     } finally {
       setLoading(false);
@@ -282,7 +282,7 @@ function CoinFlip({ onBack }: CoinFlipProps) {
         setTimeout(() => setMessage(""), 3000);
       }
     } catch (error: any) {
-      console.error("Leave game error:", error);
+      // leave game error (silenced)
       setMessage(`Error: ${error.message}`);
     } finally {
       setLoading(false);
@@ -322,13 +322,13 @@ function CoinFlip({ onBack }: CoinFlipProps) {
           setTimeout(() => setMessage(""), 3000);
         } catch (loadError) {
           // Even if loading fails, we're already in the game
-          console.error("Load game info error after join:", loadError);
+          // load game info error after join (ignored)
           setMessage("Joined! Refreshing game state...");
           setTimeout(() => setMessage(""), 3000);
         }
       }
     } catch (error: any) {
-      console.error("Join game error:", error);
+      // join game error (silenced)
 
       // Check if game expired
       if (error.message && error.message.includes("Game expired")) {
@@ -369,7 +369,7 @@ function CoinFlip({ onBack }: CoinFlipProps) {
         setTimeout(() => setMessage(""), 3000);
       }
     } catch (error: any) {
-      console.error("Submit choice error:", error);
+      // submit choice error (silenced)
       setMessage(`Error: ${error.message}`);
     } finally {
       setLoading(false);

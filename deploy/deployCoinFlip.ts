@@ -11,7 +11,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   });
 
-  console.log(`FHECoinFlip contract deployed at: ${deployed.address}`);
+  // FHECoinFlip deployed at deployed.address
 };
 
 export default func;

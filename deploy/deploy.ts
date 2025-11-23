@@ -10,7 +10,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   });
 
-  console.log(`FHECounter contract: `, deployedFHECounter.address);
+  // FHECounter deployed at deployedFHECounter.address
 };
 export default func;
 func.id = "deploy_fheCounter"; // id required to prevent reexecution

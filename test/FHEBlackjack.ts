@@ -124,18 +124,25 @@ describe("FHEBlackjack", function () {
     });
 
     it("Should not allow hit after standing", async function () {
+      // Ensure there is an active game before standing
+      let [isActive] = await blackjack.connect(player).getGameStatus();
+      if (!isActive) {
+        const betAmount = ethers.parseEther("1");
+        await blackjack.connect(player).startGame({ value: betAmount });
+        [isActive] = await blackjack.connect(player).getGameStatus();
+        if (!isActive) throw new Error("Could not start an active game for this test");
+      }
+
+      // Stand the active game
       await blackjack.connect(player).stand();
 
       // Wait for GameEnded event
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Try to start a new game first
+      // Start a new game and then stand, then ensure hit is rejected
       const betAmount = ethers.parseEther("1");
       await blackjack.connect(player).startGame({ value: betAmount });
-
-      // Now stand and try to hit
       await blackjack.connect(player).stand();
-
       await expect(blackjack.connect(player).hit()).to.be.revertedWith("No active game");
     });
 

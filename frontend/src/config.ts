@@ -12,3 +12,8 @@ export const NETWORK_CONFIG = {
   chainName: import.meta.env.VITE_CHAIN_NAME || "Sepolia",
   rpcUrl: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
 };
+
+// Additional per-game contract addresses. If not provided, fall back to main `CONTRACT_ADDRESS`.
+export const COINFLIP_CONTRACT_ADDRESS = (import.meta.env.VITE_COINFLIP_CONTRACT_ADDRESS as string) || CONTRACT_ADDRESS;
+
+export const POKER_CONTRACT_ADDRESS = (import.meta.env.VITE_POKER_CONTRACT_ADDRESS as string) || CONTRACT_ADDRESS;

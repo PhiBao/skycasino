@@ -90,7 +90,7 @@ function Blackjack({ onBack }: BlackjackProps) {
         });
       }
     } catch (error) {
-      console.log("No active game or error loading state", error);
+      // No active game or error loading state (suppressed)
     }
   };
 
@@ -167,7 +167,7 @@ function Blackjack({ onBack }: BlackjackProps) {
         setMessage("Transaction failed");
       }
     } catch (error: any) {
-      console.error(`Error ${actionName}:`, error);
+      // Error performing action (suppressed)
       setMessage(`Error: ${error.message || "Unknown error"}`);
     } finally {
       setLoading(false);

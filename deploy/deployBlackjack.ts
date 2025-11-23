@@ -11,7 +11,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   });
 
-  console.log(`FHEBlackjack contract deployed at: `, deployedBlackjack.address);
+  // FHEBlackjack deployed at deployedBlackjack.address
 
   // Fund the contract with initial house bankroll (optional)
   if (hre.network.name === "localhost" || hre.network.name === "hardhat") {
@@ -21,7 +21,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       value: ethers.parseEther("10"), // 10 ETH house bankroll
     });
     await tx.wait();
-    console.log(`Funded contract with 10 ETH house bankroll`);
+    // Funded contract with 10 ETH house bankroll (development)
   }
 };
 

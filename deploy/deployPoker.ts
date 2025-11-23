@@ -11,7 +11,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   });
 
-  console.log(`FHEPoker contract deployed at: ${deployed.address}`);
+  // FHEPoker deployed at deployed.address
 };
 
 export default func;

@@ -1,31 +1,28 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  console.log("Deploying FHEPoker...");
+  // Deploying FHEPoker
   const FHEPoker = await ethers.getContractFactory("FHEPoker");
   const poker = await FHEPoker.deploy();
   await poker.waitForDeployment();
   const pokerAddress = await poker.getAddress();
-  console.log("FHEPoker deployed to:", pokerAddress);
+  // FHEPoker deployed to: (address available in `pokerAddress` variable)
 
-  console.log("\nDeploying FHECoinFlip...");
+  // Deploying FHECoinFlip
   const FHECoinFlip = await ethers.getContractFactory("FHECoinFlip");
   const coinflip = await FHECoinFlip.deploy();
   await coinflip.waitForDeployment();
   const coinflipAddress = await coinflip.getAddress();
-  console.log("FHECoinFlip deployed to:", coinflipAddress);
+  // FHECoinFlip deployed to: (address available in `coinflipAddress` variable)
 
-  console.log("\n=== Deployment Summary ===");
-  console.log("FHEPoker:", pokerAddress);
-  console.log("FHECoinFlip:", coinflipAddress);
-  console.log("\nUpdate these addresses in:");
-  console.log("- frontend/src/Poker.tsx");
-  console.log("- frontend/src/CoinFlip.tsx");
+  // Deployment summary available in variables `pokerAddress` and `coinflipAddress`.
+  // Update addresses in frontend files if needed.
 }
 
 main()
   .then(() => process.exit(0))
   .catch((error) => {
+    // Critical failure during deployment
     console.error(error);
     process.exit(1);
   });
